@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - بورتفوليو</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#08080a',
+                            card: '#121216',
+                            neon: '#ff0033' // Unified Crimson Neon Red
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- CUSTOM CAMERA CURSOR --- */
+        body {
+            background-color: #08080a;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            /* Camera Cursor (SVG Data URI) */
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23ff0033' stroke='%23ffffff' stroke-width='1.5'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg>") 12 12, auto;
+        }
+
+        a, button, input, [role="button"] {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24' fill='%23ff0033' stroke='%23ffffff' stroke-width='2'><path d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/><circle cx='12' cy='13' r='4'/></svg>") 14 14, pointer;
+        }
+
+        /* --- RESPONSIVE VIDEO DISPLAY --- */
+        .hero-video-container {
+            width: 100%;
+            max-width: 950px;
+            aspect-ratio: 16 / 9;
+        }
+        @media (max-width: 640px) {
+            .hero-video-container {
+                aspect-ratio: 4 / 3; /* Better fit for mobile screens without overflow */
+            }
+        }
+
+        /* --- GLASSMORTISM & NEON GLOW EFFECTS --- */
+        .glass-card {
+            background: rgba(18, 18, 22, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 0, 51, 0.15);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Unified Neon Red Hover State */
+        .glass-card-hover:hover {
+            border-color: #ff0033 !important;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.4), 0 0 40px rgba(255, 0, 51, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Neon Glow Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            background-color: #ff0033;
+            opacity: 0.22;
+            pointer-events: none;
+            z-index: 0;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.18; }
+            100% { transform: scale(1.15) translate(15px, -15px); opacity: 0.3; }
+        }
+
+        /* --- SLIDER TRACK (MOBILE FIT FIXED) --- */
+        .slider-track {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+            width: 100%;
+        }
+
+        .slide-item {
+            /* Mobile: Exactly 1 card per view (100% minus gap adjustment) */
+            flex: 0 0 calc(100% - 0px);
+            max-width: 100%;
+        }
+        @media (min-width: 640px) {
+            .slide-item {
+                flex: 0 0 calc(50% - 12px);
+                max-width: 50%;
+            }
+        }
+        @media (min-width: 1024px) {
+            .slide-item {
+                flex: 0 0 calc(33.333% - 16px);
+                max-width: 33.333%;
+            }
+        }
+
+        /* --- TICKER MARQUEE --- */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: 200%;
+            animation: marquee 22s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+        [dir="ltr"] .animate-marquee {
+            animation-direction: reverse;
+        }
+
+        /* Neon Text Glow Helper */
+        .neon-text {
+            color: #ff0033;
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.6), 0 0 20px rgba(255, 0, 51, 0.3);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen text-gray-100 antialiased selection:bg-[#ff0033] selection:text-white">
+
+    <!-- Background Unified Neon Red Orbs -->
+    <div class="glow-orb w-[280px] h-[280px] sm:w-[500px] sm:h-[500px] top-[-80px] start-[-80px]"></div>
+    <div class="glow-orb w-[220px] h-[220px] sm:w-[450px] sm:h-[450px] top-[45%] end-[-80px]"></div>
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 start-0 end-0 z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <div class="glass-card rounded-2xl px-4 sm:px-5 py-2.5 sm:py-3 flex items-center justify-between border-white/10">
+                <!-- Brand Name -->
+                <a href="#" class="text-lg sm:text-2xl font-black tracking-wider text-white hover:text-[#ff0033] transition">
+                    <span data-ar="اسم الموقع" data-en="BRAND NAME">اسم الموقع</span>
+                </a>
+
+                <!-- Navigation Links & Language Switcher -->
+                <nav class="flex items-center gap-3 sm:gap-8">
+                    <div class="hidden md:flex items-center gap-6 text-sm font-semibold text-gray-300">
+                        <a href="#hero" class="hover:text-[#ff0033] transition" data-ar="الرئيسية" data-en="Home">الرئيسية</a>
+                        <a href="#clients" class="hover:text-[#ff0033] transition" data-ar="شركاء النجاح" data-en="Clients">شركاء النجاح</a>
+                        <a href="#photography" class="hover:text-[#ff0033] transition" data-ar="التصوير" data-en="Photography">التصوير</a>
+                        <a href="#video-editing" class="hover:text-[#ff0033] transition" data-ar="المونتاج" data-en="Editing">المونتاج</a>
+                        <a href="#ai-content" class="hover:text-[#ff0033] transition" data-ar="الذكاء الاصطناعي" data-en="AI & Content">الذكاء الاصطناعي</a>
+                    </div>
+
+                    <!-- Language Switcher Button -->
+                    <button id="langToggle" class="glass-card glass-card-hover px-3 py-1.5 rounded-xl text-xs sm:text-sm font-bold text-[#ff0033] flex items-center gap-1.5 transition">
+                        <span id="langText">EN</span>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1 4h6m-6 4h6m-6 4h6M4 11h6m-6 4h6m-6 4h6"></path></svg>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 pt-24 sm:pt-36 space-y-16 sm:space-y-32 pb-16">
+
+        <!-- HERO SECTION -->
+        <section id="hero" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+            
+            <!-- Main Title & Tagline -->
+            <div class="max-w-3xl space-y-3 sm:space-y-4 mb-6 sm:mb-10">
+                <h1 class="text-2xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
+                    <span data-ar="مرحباً، أنا" data-en="Hello, I'm">مرحباً، أنا</span> 
+                    <span class="neon-text" data-ar="اسم المبدعة" data-en="Creator Name">اسم المبدعة</span>
+                </h1>
+                <p class="text-xs sm:text-xl text-gray-400 font-medium px-2" data-ar="متخصصة في التصوير، المونتاج، وصناعة المحتوى بالذكاء الاصطناعي" data-en="Specialized in Photography, Video Editing, AI & Content Creation">
+                    متخصصة في التصوير، المونتاج، وصناعة المحتوى بالذكاء الاصطناعي
+                </p>
+            </div>
+
+            <!-- LARGE VIDEO CONTAINER AREA (RESPONSIVE) -->
+            <div class="hero-video-container relative glass-card glass-card-hover rounded-2xl sm:rounded-3xl overflow-hidden p-1.5 sm:p-3 shadow-2xl border border-white/10">
+                <div class="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-brand-dark flex items-center justify-center">
+                    
+                    <!-- HTML5 Video Player Container -->
+                    <video class="w-full h-full object-cover rounded-xl sm:rounded-2xl" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1200&q=80">
+                        <source src="your-video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+
+                    <!-- Overlay Gradient Effect -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- CLIENTS / FEATURED BRANDS MARQUEE -->
+        <section id="clients" class="py-4 sm:py-6 border-y border-white/10 bg-brand-card/40 backdrop-blur-md overflow-hidden relative">
+            <div class="max-w-7xl mx-auto px-4 mb-3 text-center">
+                <p class="text-[10px] sm:text-xs font-bold tracking-widest text-[#ff0033] uppercase" data-ar="جهات وعلامات تجارية عملت معها" data-en="BRANDS & CLIENTS I WORKED WITH">
+                    جهات وعلامات تجارية عملت معها
+                </p>
+            </div>
+
+            <!-- Ticker Wrapper -->
+            <div class="flex overflow-hidden relative w-full select-none">
+                <div class="animate-marquee flex items-center justify-around gap-8 sm:gap-16 text-gray-400 font-extrabold text-sm sm:text-2xl whitespace-nowrap">
+                    <span class="hover:text-white transition">BRAND / COMPANY 1</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">اسم الجهة الأولى</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">STUDIO NAME</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">شركة الإنتاج الثانية</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">GLOBAL CLIENT</span>
+                    <span class="text-[#ff0033]">•</span>
+
+                    <!-- Duplicated set for smooth looping -->
+                    <span class="hover:text-white transition">BRAND / COMPANY 1</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">اسم الجهة الأولى</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">STUDIO NAME</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">شركة الإنتاج الثانية</span>
+                    <span class="text-[#ff0033]">•</span>
+                    <span class="hover:text-white transition">GLOBAL CLIENT</span>
+                    <span class="text-[#ff0033]">•</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SLIDER SECTION 1: PHOTOGRAPHY -->
+        <section id="photography" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
+            <div class="flex items-end justify-between border-b border-white/10 pb-3 sm:pb-4">
+                <div>
+                    <h2 class="text-xl sm:text-3xl font-black text-white" data-ar="التصوير الفوتوغرافي" data-en="Photography">التصوير الفوتوغرافي</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5" data-ar="لقطات احترافية ومعالجة ألوان متقدمة" data-en="Professional shots & advanced color grading">لقطات احترافية ومعالجة ألوان متقدمة</p>
+                </div>
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-2">
+                    <button onclick="moveSlider('slider1', -1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button onclick="moveSlider('slider1', 1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slider Viewport -->
+            <div class="overflow-hidden relative touch-pan-y w-full" id="slider1-container">
+                <div id="slider1" class="slider-track gap-3 sm:gap-6">
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[4/3] overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=800&q=80" alt="Work" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="جلسة تصوير منتجات" data-en="Product Photography">جلسة تصوير منتجات</h3>
+                            <p class="text-xs text-gray-400" data-ar="إضاءة استوديو تجارية" data-en="Commercial Studio Lighting">إضاءة استوديو تجارية</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[4/3] overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80" alt="Work" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="تصوير بورتريه" data-en="Portrait Photography">تصوير بورتريه</h3>
+                            <p class="text-xs text-gray-400" data-ar="لقطات سينمائية خارجية" data-en="Cinematic Outdoor Shots">لقطات سينمائية خارجية</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[4/3] overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=800&q=80" alt="Work" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="تصوير المعمار" data-en="Architecture">تصوير المعمار</h3>
+                            <p class="text-xs text-gray-400" data-ar="تكوينات زوايا عريضة" data-en="Wide Angle Compositions">تكوينات زوايا عريضة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SLIDER SECTION 2: VIDEO EDITING & CONTENT CREATION -->
+        <section id="video-editing" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
+            <div class="flex items-end justify-between border-b border-white/10 pb-3 sm:pb-4">
+                <div>
+                    <h2 class="text-xl sm:text-3xl font-black text-white" data-ar="المونتاج وصناعة المحتوى" data-en="Editing & Content">المونتاج وصناعة المحتوى</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5" data-ar="تحرير فيديوهات قصيرة وطويلة بأسلوب جذاب" data-en="Engaging short & long form video editing">تحرير فيديوهات قصيرة وطويلة بأسلوب جذاب</p>
+                </div>
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-2">
+                    <button onclick="moveSlider('slider2', -1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button onclick="moveSlider('slider2', 1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slider Viewport -->
+            <div class="overflow-hidden relative touch-pan-y w-full" id="slider2-container">
+                <div id="slider2" class="slider-track gap-3 sm:gap-6">
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[16/9] overflow-hidden relative bg-black/50">
+                            <img src="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=800&q=80" alt="Editing" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ff0033] flex items-center justify-center text-white backdrop-blur-sm group-hover:scale-110 transition shadow-lg shadow-[#ff0033]/40">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current translate-x-0.5 rtl:-translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="إعلان ترويجي سريع" data-en="Promo Commercial Video">إعلان ترويجي سريع</h3>
+                            <p class="text-xs text-gray-400" data-ar="مؤثرات بصرية وسوند ديزاين" data-en="VFX & Sound Design">مؤثرات بصرية وسوند ديزاين</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[16/9] overflow-hidden relative bg-black/50">
+                            <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80" alt="Editing" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ff0033] flex items-center justify-center text-white backdrop-blur-sm group-hover:scale-110 transition shadow-lg shadow-[#ff0033]/40">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current translate-x-0.5 rtl:-translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="فيديوهات ريلز وشورتس" data-en="Reels & Shorts">فيديوهات ريلز وشورتس</h3>
+                            <p class="text-xs text-gray-400" data-ar="نصوص ديناميكية وترندات" data-en="Dynamic Subtitles & Motion">نصوص ديناميكية وترندات</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-[16/9] overflow-hidden relative bg-black/50">
+                            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=800&q=80" alt="Editing" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#ff0033] flex items-center justify-center text-white backdrop-blur-sm group-hover:scale-110 transition shadow-lg shadow-[#ff0033]/40">
+                                    <svg class="w-5 h-5 sm:w-6 sm:h-6 fill-current translate-x-0.5 rtl:-translate-x-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="وثائقي قصير" data-en="Short Documentary">وثائقي قصير</h3>
+                            <p class="text-xs text-gray-400" data-ar="سرد قصصي وتعديل ألوان" data-en="Storytelling & Color Grading">سرد قصصي وتعديل ألوان</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SLIDER SECTION 3: AI & ART GENERATION -->
+        <section id="ai-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
+            <div class="flex items-end justify-between border-b border-white/10 pb-3 sm:pb-4">
+                <div>
+                    <h2 class="text-xl sm:text-3xl font-black text-white" data-ar="الذكاء الاصطناعي والفن الرقمي" data-en="AI & Digital Art">الذكاء الاصطناعي والفن الرقمي</h2>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5" data-ar="توليد وتطوير مشاهد وشخصيات ثلاثية الأبعاد بالذكاء الاصطناعي" data-en="AI-generated visuals, avatars & 3D concepts">توليد وتطوير مشاهد وشخصيات ثلاثية الأبعاد بالذكاء الاصطناعي</p>
+                </div>
+                <!-- Navigation Controls -->
+                <div class="flex items-center gap-2">
+                    <button onclick="moveSlider('slider3', -1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button onclick="moveSlider('slider3', 1)" class="glass-card glass-card-hover p-2.5 sm:p-3 rounded-full text-white">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Slider Viewport -->
+            <div class="overflow-hidden relative touch-pan-y w-full" id="slider3-container">
+                <div id="slider3" class="slider-track gap-3 sm:gap-6">
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-square overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80" alt="AI Art" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="خلفيات 3D بالذكاء الاصطناعي" data-en="3D AI Environments">خلفيات 3D بالذكاء الاصطناعي</h3>
+                            <p class="text-xs text-gray-400" data-ar="تصاميم مستقبلية فائقة الدقة" data-en="Futuristic Ultra-Realistic Render">تصاميم مستقبلية فائقة الدقة</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-square overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&q=80" alt="AI Art" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="شخصيات افتراضية سينمائية" data-en="Cinematic AI Avatars">شخصيات افتراضية سينمائية</h3>
+                            <p class="text-xs text-gray-400" data-ar="تطوير مفهوم الشخصية والتوليد" data-en="Character Concept & Prompting">تطوير مفهوم الشخصية والتوليد</p>
+                        </div>
+                    </div>
+                    <!-- Slide Item -->
+                    <div class="slide-item glass-card glass-card-hover rounded-2xl overflow-hidden group">
+                        <div class="aspect-square overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80" alt="AI Art" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="p-4 sm:p-5 space-y-0.5">
+                            <h3 class="text-base sm:text-lg font-bold text-white" data-ar="دمج الفيديو الذكي" data-en="AI Video Generations">دمج الفيديو الذكي</h3>
+                            <p class="text-xs text-gray-400" data-ar="تحريك الصور وتوليد المشاهد" data-en="Image-to-Video Animation">تحريك الصور وتوليد المشاهد</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER / CONTACT SECTION -->
+    <footer class="border-t border-white/10 bg-brand-card/70 backdrop-blur-xl py-10 sm:py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-4 sm:space-y-6">
+            <h3 class="text-xl sm:text-2xl font-bold text-white" data-ar="هل لديك مشروع تريد تنفيذه؟" data-en="Have a project in mind?">هل لديك مشروع تريد تنفيذه؟</h3>
+            <p class="text-gray-400 text-xs sm:text-sm max-w-md mx-auto" data-ar="تواصل معي للبدء في تحويل أفكارك إلى واقع مرئي مذهل." data-en="Get in touch to bring your vision to life with high quality visuals.">تواصل معي للبدء في تحويل أفكارك إلى واقع مرئي مذهل.</p>
+            
+            <div class="flex items-center justify-center gap-4 pt-2">
+                <a href="mailto:contact@example.com" class="bg-[#ff0033] hover:bg-[#e0002d] text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-[#ff0033]/30 text-xs sm:text-sm">
+                    <span data-ar="تواصل عبر البريد" data-en="Email Me">تواصل عبر البريد</span>
+                </a>
+            </div>
+
+            <div class="pt-6 border-t border-white/5 text-[10px] sm:text-xs text-gray-500">
+                <p>&copy; 2026 Portfolio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- JAVASCRIPT: ACCURATE SLIDERS & LANG TOGGLE -->
+    <script>
+        // --- 1. LANGUAGE SWITCH SYSTEM ---
+        let currentLang = 'ar';
+
+        const langToggleBtn = document.getElementById('langToggle');
+        const langText = document.getElementById('langText');
+
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            langText.textContent = currentLang === 'ar' ? 'EN' : 'عربي';
+
+            document.querySelectorAll('[data-ar]').forEach(el => {
+                const text = el.getAttribute(`data-${currentLang}`);
+                if (text) el.textContent = text;
+            });
+        });
+
+
+        // --- 2. ACCURATE MOBILE & DESKTOP SLIDER SYSTEM ---
+        const sliderIndices = {
+            slider1: 0,
+            slider2: 0,
+            slider3: 0
+        };
+
+        function moveSlider(sliderId, direction) {
+            const slider = document.getElementById(sliderId);
+            if (!slider) return;
+
+            const cards = slider.children;
+            if (cards.length === 0) return;
+
+            const cardWidth = cards[0].getBoundingClientRect().width;
+            
+            // Calculate Gap dynamically
+            const gap = window.innerWidth < 640 ? 12 : 24; 
+            const step = cardWidth + gap;
+
+            // Determine visible cards based on screen size
+            let visibleCards = 1;
+            if (window.innerWidth >= 1024) visibleCards = 3;
+            else if (window.innerWidth >= 640) visibleCards = 2;
+
+            const maxIndex = cards.length - visibleCards;
+
+            sliderIndices[sliderId] += direction;
+
+            // Clamp index boundaries accurately
+            if (sliderIndices[sliderId] < 0) sliderIndices[sliderId] = 0;
+            if (sliderIndices[sliderId] > maxIndex) sliderIndices[sliderId] = maxIndex;
+
+            const isRTL = document.documentElement.dir === 'rtl';
+            const moveAmount = sliderIndices[sliderId] * step;
+            
+            const translateX = isRTL ? moveAmount : -moveAmount;
+            slider.style.transform = `translateX(${translateX}px)`;
+        }
+
+        // Add Touch / Swipe Support for Mobile
+        ['slider1', 'slider2', 'slider3'].forEach(id => {
+            const container = document.getElementById(`${id}-container`);
+            if (!container) return;
+
+            let startX = 0;
+            let endX = 0;
+
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+
+            container.addEventListener('touchend', (e) => {
+                endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+                const isRTL = document.documentElement.dir === 'rtl';
+
+                if (Math.abs(diff) > 35) {
+                    if (diff > 0) {
+                        moveSlider(id, isRTL ? -1 : 1);
+                    } else {
+                        moveSlider(id, isRTL ? 1 : -1);
+                    }
+                }
+            }, { passive: true });
+        });
+    </script>
+</body>
+</html>
